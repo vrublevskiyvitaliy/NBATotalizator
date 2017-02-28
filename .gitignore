@@ -1,0 +1,6 @@
+.idea
+*.pyc
+logs
+tmp
+.ropeproject
+*.sublime*
