@@ -4,7 +4,7 @@ import re
 import json
 from lxml import html
 
-url = 'http://www.betexplorer.com/basketball/usa/nba-2015-2016/results/?stage=MDLVWKFc&month=all'
+url = 'http://www.betexplorer.com/basketball/usa/nba-2014-2015/results/?stage=ShmZavVI&month=all'
 
 
 def get_data():
@@ -39,14 +39,14 @@ def get_data():
         all_matchs.append({
             'first_team': f_team,
             'second_team': s_team,
-            'first_score': f_score,
-            'second_score': s_score,
+            'first_score': int(f_score),
+            'second_score': int(s_score),
             'f_odd': f_odd,
             's_odd': s_odd,
             'date': date
         })
 
-    with open('data.json', 'w') as outfile:
+    with open('data_old.json', 'w') as outfile:
         json.dump(all_matchs, outfile)
 
 
