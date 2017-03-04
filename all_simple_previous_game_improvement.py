@@ -3,23 +3,34 @@ from utils import *
 CLOSE_TO_ZERO = 2
 REFUSAL = 'REFUSAL'
 
+def get_risk(match, history):
+    previous_home_match = get_all_prev_match_of_home_team(match['first_team'], history, match['date'])
+    previous_guest_match = get_all_prev_match_of_guest_team(match['second_team'], history, match['date'])
 
-def get_winner_simple(match, history):
-    previous_home_match = get_prev_match_of_home_team(match['first_team'], history, match['date'])
-    previous_guest_match = get_prev_match_of_guest_team(match['second_team'], history, match['date'])
-
-    if previous_home_match is None or previous_guest_match is None:
+    if len(previous_home_match) == 0 or len(previous_guest_match) == 0:
         return None
 
-    home_risk = previous_home_match['first_score'] - previous_home_match['second_score']
+    home_risk = 0
+    for match in previous_home_match:
+        home_risk += match['first_score'] - match['second_score']
+    home_risk /= len(previous_home_match)
 
-    guest_risk = previous_guest_match['second_score'] - previous_guest_match['first_score']
+    guest_risk = 0
+    for match in previous_guest_match:
+        guest_risk += match['second_score'] - match['first_score']
+    guest_risk /= len(previous_guest_match)
 
     total_risk = home_risk - guest_risk
+    return total_risk
 
-    if abs(total_risk) <= CLOSE_TO_ZERO:
+
+def get_winner_simple(match, history):
+    risk = get_risk(match, history)
+    if risk is None:
+        return None
+    if abs(risk) <= CLOSE_TO_ZERO:
         return REFUSAL
-    elif total_risk <= 0:
+    if risk <= 0:
         return match['second_team']
     else:
         return match['first_team']

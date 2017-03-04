@@ -7,9 +7,11 @@ CLOSE_TO_ZERO = between [-2, 2].
 
 ## Results:
 | ------ | ------ |
+| Correct prediction percent | 54% |
 | We gain | -36.7 |
 | Per game gain | -0.029 |
 | Correct predictions | 647 |
 | Incorrect predictions | 420 |
 | We cannot predict | 39 |
 | Refusals | 124 |
+| Refusals percent | 11% |

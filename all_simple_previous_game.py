@@ -1,25 +1,33 @@
+
 from utils import *
 
-CLOSE_TO_ZERO = 2
-REFUSAL = 'REFUSAL'
+
+def get_risk(match, history):
+    previous_home_match = get_all_prev_match_of_home_team(match['first_team'], history, match['date'])
+    previous_guest_match = get_all_prev_match_of_guest_team(match['second_team'], history, match['date'])
+
+    if len(previous_home_match) == 0 or len(previous_guest_match) == 0:
+        return None
+
+    home_risk = 0
+    for match in previous_home_match:
+        home_risk += match['first_score'] - match['second_score']
+    home_risk /= len(previous_home_match)
+
+    guest_risk = 0
+    for match in previous_guest_match:
+        guest_risk += match['second_score'] - match['first_score']
+    guest_risk /= len(previous_guest_match)
+
+    total_risk = home_risk - guest_risk
+    return total_risk
 
 
 def get_winner_simple(match, history):
-    previous_home_match = get_prev_match_of_home_team(match['first_team'], history, match['date'])
-    previous_guest_match = get_prev_match_of_guest_team(match['second_team'], history, match['date'])
-
-    if previous_home_match is None or previous_guest_match is None:
+    risk = get_risk(match, history)
+    if risk is None:
         return None
-
-    home_risk = previous_home_match['first_score'] - previous_home_match['second_score']
-
-    guest_risk = previous_guest_match['second_score'] - previous_guest_match['first_score']
-
-    total_risk = home_risk - guest_risk
-
-    if abs(total_risk) <= CLOSE_TO_ZERO:
-        return REFUSAL
-    elif total_risk <= 0:
+    if risk <= 0:
         return match['second_team']
     else:
         return match['first_team']
@@ -29,21 +37,14 @@ def main():
     history = get_history()
     my_results = []
     for i in range(len(history)):
+        if i == 1220:
+            t = 0
         winner = get_winner_simple(history[i], history[i+1:])
         if winner is None:
             my_results.append(
                 {
                     'match': history[i],
                     'my_result': None,
-                    'gain': 0,
-                    'is_correct': 0
-                }
-            )
-        elif winner == REFUSAL:
-            my_results.append(
-                {
-                    'match': history[i],
-                    'my_result': REFUSAL,
                     'gain': 0,
                     'is_correct': 0
                 }
@@ -77,8 +78,6 @@ def main():
     correct_predictions = 0
     incorrect_predictions = 0
     drop_predictions = 0
-    refusals = 0
-
     for res in my_results:
         sum_gain += res['gain']
         sum_correct += res['is_correct']
@@ -86,20 +85,16 @@ def main():
             correct_predictions += 1
         elif res['is_correct'] < 0:
             incorrect_predictions += 1
-        elif res['my_result'] == REFUSAL:
-            refusals += 1
         else:
             drop_predictions += 1
 
     print('Prediction percent: ', correct_predictions*1./(len(history)-drop_predictions))
-    print('We gain: ', sum_gain)
-    print('Per game gain: ', sum_gain / len(history))
-    print('Total summarized predictions: ', sum_correct)
-    print('Correct predictions: ', correct_predictions)
-    print('Incorrect predictions: ', incorrect_predictions)
-    print('We cannot predict: ', drop_predictions)
-    print('Refusals: ', refusals)
-    print('Refusals percent: ', refusals*1./(len(history)-refusals))
+    print('We gain: ' + str(sum_gain))
+    print('Per game gain: ' + str(sum_gain / len(history)))
+    print('Total summarized predictions: ' + str(sum_correct))
+    print('Correct predictions: ' + str(correct_predictions))
+    print('Incorrect predictions: ' + str(incorrect_predictions))
+    print('We cannot predict: ' + str(drop_predictions))
 
 
 main()

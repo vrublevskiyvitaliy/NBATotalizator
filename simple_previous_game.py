@@ -74,6 +74,7 @@ def main():
         else:
             drop_predictions += 1
 
+    print('Prediction percent: ', correct_predictions*1./(len(history) - drop_predictions))
     print('We gain: ', sum_gain)
     print('Per game gain: ', sum_gain / len(history))
     print('Total summarized predictions: ', sum_correct)

@@ -7,6 +7,7 @@
 
 ## Results:
 | ------ | ------ |
+| Correct prediction percent | 59% |
 | We gain | -56.63 |
 | Per game gain | -0.0460 |
 | Correct predictions | 701 |
