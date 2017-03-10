@@ -5,13 +5,15 @@ from utils import *
 
 CLOSE_TO_ZERO = 0.15
 REFUSAL = 'REFUSAL'
+REFUSAL_TO_BAD_STATISTIC_AMOUNT = 2
 
 
 def get_probability(match, history):
     previous_home_match = get_all_prev_match_of_home_team(match['first_team'], history, match['date'])
     previous_guest_match = get_all_prev_match_of_guest_team(match['second_team'], history, match['date'])
 
-    if len(previous_home_match) == 0 or len(previous_guest_match) == 0:
+    if len(previous_home_match) <= REFUSAL_TO_BAD_STATISTIC_AMOUNT or \
+                    len(previous_guest_match) <= REFUSAL_TO_BAD_STATISTIC_AMOUNT:
         return None
 
     home_scores = [match['first_score'] - match['second_score'] for match in previous_home_match]
