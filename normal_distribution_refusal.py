@@ -6,6 +6,7 @@ from utils import *
 CLOSE_TO_ZERO = 0.15
 REFUSAL = 'REFUSAL'
 REFUSAL_TO_BAD_STATISTIC_AMOUNT = 2
+REFUSAL_MAX_RISK = 0.2
 
 
 def get_probability(match, history):
@@ -46,6 +47,9 @@ def get_risk(match, history):
 
     home_risk = 1 - h_probability * match['f_odd']
     guest_risk = 1 - g_probability * match['s_odd']
+
+    if home_risk > REFUSAL_MAX_RISK or guest_risk > REFUSAL_MAX_RISK:
+        return None
 
     total_risk = guest_risk - home_risk
     #total_risk = h_probability - g_probability
