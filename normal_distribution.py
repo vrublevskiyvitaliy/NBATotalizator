@@ -11,8 +11,8 @@ def get_probability(match, history):
     if len(previous_home_match) == 0 or len(previous_guest_match) == 0:
         return None
 
-    home_scores = [match['first_score'] for match in previous_home_match]
-    guest_scores = [match['second_score'] for match in previous_guest_match]
+    home_scores = [match['first_score'] - match['second_score'] for match in previous_home_match]
+    guest_scores = [match['second_score'] - match['first_score'] for match in previous_guest_match]
 
     home_scores = np.array(home_scores)
     guest_scores = np.array(guest_scores)
@@ -63,7 +63,7 @@ def main():
     history = get_history()
     my_results = []
     for i in range(len(history)):
-        h = history[i+1:] + get_old_history()
+        h = history[i+1:]
         winner = get_winner_simple(history[i], h)
         if winner is None:
             my_results.append(

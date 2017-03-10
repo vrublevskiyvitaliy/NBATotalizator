@@ -3,8 +3,9 @@ import math
 import scipy.stats
 from utils import *
 
-CLOSE_TO_ZERO = 0.1
+CLOSE_TO_ZERO = 0.15
 REFUSAL = 'REFUSAL'
+
 
 def get_probability(match, history):
     previous_home_match = get_all_prev_match_of_home_team(match['first_team'], history, match['date'])
@@ -13,8 +14,8 @@ def get_probability(match, history):
     if len(previous_home_match) == 0 or len(previous_guest_match) == 0:
         return None
 
-    home_scores = [match['first_score'] for match in previous_home_match]
-    guest_scores = [match['second_score'] for match in previous_guest_match]
+    home_scores = [match['first_score'] - match['second_score'] for match in previous_home_match]
+    guest_scores = [match['second_score'] - match['first_score'] for match in previous_guest_match]
 
     home_scores = np.array(home_scores)
     guest_scores = np.array(guest_scores)
@@ -45,7 +46,7 @@ def get_risk(match, history):
     guest_risk = 1 - g_probability * match['s_odd']
 
     total_risk = guest_risk - home_risk
-    total_risk = h_probability - g_probability
+    #total_risk = h_probability - g_probability
     return total_risk
 
 
