@@ -3,9 +3,9 @@ import math
 import scipy.stats
 from utils import *
 
-CLOSE_TO_ZERO = 0.15
+CLOSE_TO_ZERO = 0.13
 REFUSAL = 'REFUSAL'
-REFUSAL_TO_BAD_STATISTIC_AMOUNT = 2
+REFUSAL_TO_BAD_STATISTIC_AMOUNT = 1
 REFUSAL_MAX_RISK = 0.2
 
 
@@ -59,7 +59,7 @@ def get_risk(match, history):
 def get_winner_simple(match, history):
     risk = get_risk(match, history)
     if risk is None:
-        return None
+        return REFUSAL
     if abs(risk) <= CLOSE_TO_ZERO:
         return REFUSAL
     if risk <= 0:
@@ -142,11 +142,37 @@ def main():
     print('Incorrect predictions: ', incorrect_predictions)
     print('We cannot predict: ', drop_predictions)
     print('Refusals: ', refusals)
-    print('Refusals percent: ', refusals*1./(len(history)-refusals))
+
+    return sum_gain
 
 
+def get_best_model():
+    max_gain = -1000
+    best_k1 = 0
+    best_k2 = 0
+    global CLOSE_TO_ZERO
+    global REFUSAL_TO_BAD_STATISTIC_AMOUNT
+    for k1 in range(40):
+        k1_coef = k1 * 0.01
+        CLOSE_TO_ZERO = k1_coef
+        for k2 in range(10):
+            k2_coef = k2
+            REFUSAL_TO_BAD_STATISTIC_AMOUNT = k2_coef
+
+            gain = main()
+            if gain > max_gain:
+                best_k1 = k1_coef
+                best_k2 = k2_coef
+                max_gain = gain
+            print '*', ' '
+    print('BEST CLOSE_TO_ZERO: ' + str(best_k1))
+    print('BEST REFUSAL_TO_BAD_STATISTIC_AMOUNT: ' + str(best_k2))
+    print('We gain: ' + str(max_gain))
+
+
+
+#get_best_model()
 main()
-
 
 
 
