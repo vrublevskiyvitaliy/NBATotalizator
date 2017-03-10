@@ -7,6 +7,7 @@ CLOSE_TO_ZERO = 0.13
 REFUSAL = 'REFUSAL'
 REFUSAL_TO_BAD_STATISTIC_AMOUNT = 1
 REFUSAL_MAX_RISK = 0.2
+all_data =[]
 
 
 def get_probability(match, history):
@@ -134,14 +135,14 @@ def main():
         else:
             drop_predictions += 1
 
-    print('Prediction percent: ', correct_predictions*1./(len(history)-drop_predictions))
-    print('We gain: ', sum_gain)
-    print('Per game gain: ', sum_gain / len(history))
-    print('Total summarized predictions: ', sum_correct)
-    print('Correct predictions: ', correct_predictions)
-    print('Incorrect predictions: ', incorrect_predictions)
-    print('We cannot predict: ', drop_predictions)
-    print('Refusals: ', refusals)
+    # print('Prediction percent: ', correct_predictions*1./(len(history)-drop_predictions))
+    # print('We gain: ', sum_gain)
+    # print('Per game gain: ', sum_gain / len(history))
+    # print('Total summarized predictions: ', sum_correct)
+    # print('Correct predictions: ', correct_predictions)
+    # print('Incorrect predictions: ', incorrect_predictions)
+    # print('We cannot predict: ', drop_predictions)
+    # print('Refusals: ', refusals)
 
     return sum_gain
 
@@ -150,29 +151,44 @@ def get_best_model():
     max_gain = -1000
     best_k1 = 0
     best_k2 = 0
+    best_k3 = -100
     global CLOSE_TO_ZERO
     global REFUSAL_TO_BAD_STATISTIC_AMOUNT
-    for k1 in range(40):
+    global REFUSAL_MAX_RISK
+    global all_data
+    cur = 0
+    for k1 in range(20):
         k1_coef = k1 * 0.01
         CLOSE_TO_ZERO = k1_coef
-        for k2 in range(10):
+        for k2 in range(6):
             k2_coef = k2
             REFUSAL_TO_BAD_STATISTIC_AMOUNT = k2_coef
-
-            gain = main()
-            if gain > max_gain:
-                best_k1 = k1_coef
-                best_k2 = k2_coef
-                max_gain = gain
-            print '*', ' '
+            for k3 in range(10):
+                k3_coef = k3 * 0.1 - 0.5
+                REFUSAL_MAX_RISK = k3_coef
+                gain = main()
+                all_data.append({'k1': k1_coef, 'k2': k2_coef, 'k3': k3_coef, 'gain': gain})
+                if gain > max_gain:
+                    best_k1 = k1_coef
+                    best_k2 = k2_coef
+                    best_k3 = k3_coef
+                    max_gain = gain
+                cur += 1
+                print cur
     print('BEST CLOSE_TO_ZERO: ' + str(best_k1))
     print('BEST REFUSAL_TO_BAD_STATISTIC_AMOUNT: ' + str(best_k2))
+    print('BEST REFUSAL_MAX_RISK: ' + str(best_k3))
     print('We gain: ' + str(max_gain))
+    write_to_file()
 
 
+def write_to_file():
+    global all_data
+    with open('my_results_2012.json', 'w') as outfile:
+        json.dump(all_data, outfile)
 
-#get_best_model()
-main()
+get_best_model()
+#main()
 
 
 
