@@ -13,21 +13,21 @@ def all_data():
 
 def get_x():
     data = all_data()
-    data = filter(lambda x: abs(x['k3'] - 0.2) < 0.01, data)
-    x = [point['k1'] for point in data]
+    data = filter(lambda x: abs(x['k1'] - 0.01) < 0.01, data)
+    x = [point['k2'] for point in data]
     return x
 
 
 def get_y():
     data = all_data()
-    data = filter(lambda x: abs(x['k3'] - 0.2) < 0.01, data)
-    y = [point['k2'] for point in data]
+    data = filter(lambda x: abs(x['k1'] - 0.01) < 0.01, data)
+    y = [point['k3'] for point in data]
     return y
 
 
 def get_z():
     data = all_data()
-    data = filter(lambda x: abs(x['k3'] - 0.2) < 0.01, data)
+    data = filter(lambda x: abs(x['k1'] - 0.01) < 0.01, data)
     gain = [point['gain'] for point in data]
     return gain
 
@@ -60,5 +60,5 @@ def main():
     ax.scatter(x, y, color = color)
     plt.show()
 
-#main()
 get_best_gain()
+main()
