@@ -7,6 +7,7 @@ from lxml import html
 url = 'http://www.betexplorer.com/basketball/usa/nba-2014-2015/results/?stage=ShmZavVI&month=all'
 url = 'http://www.betexplorer.com/basketball/usa/nba-2013-2014/results/?stage=4C5vWdeO&month=all'
 url = 'http://www.betexplorer.com/basketball/usa/nba-2012-2013/results/?stage=MmxUanEr&month=all'
+url = 'http://www.betexplorer.com/basketball/usa/nba-2015-2016/results/?stage=MDLVWKFc&month=all'
 
 
 def get_data():
@@ -51,7 +52,7 @@ def get_data():
         except Exception as e:
             print(e.message)
 
-    with open('data_2012.json', 'w') as outfile:
+    with open('data_2015.json', 'w') as outfile:
         json.dump(all_matchs, outfile)
 
 
