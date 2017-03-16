@@ -135,14 +135,14 @@ def main():
         else:
             drop_predictions += 1
 
-    # print('Prediction percent: ', correct_predictions*1./(len(history)-drop_predictions))
-    # print('We gain: ', sum_gain)
-    # print('Per game gain: ', sum_gain / len(history))
-    # print('Total summarized predictions: ', sum_correct)
-    # print('Correct predictions: ', correct_predictions)
-    # print('Incorrect predictions: ', incorrect_predictions)
-    # print('We cannot predict: ', drop_predictions)
-    # print('Refusals: ', refusals)
+    print('Prediction percent: ', correct_predictions*1./(len(history)-drop_predictions))
+    print('We gain: ', sum_gain)
+    print('Per game gain: ', sum_gain / len(history))
+    print('Total summarized predictions: ', sum_correct)
+    print('Correct predictions: ', correct_predictions)
+    print('Incorrect predictions: ', incorrect_predictions)
+    print('We cannot predict: ', drop_predictions)
+    print('Refusals: ', refusals)
 
     return sum_gain
 
@@ -187,8 +187,8 @@ def write_to_file():
     with open('my_results_2012.json', 'w') as outfile:
         json.dump(all_data, outfile)
 
-get_best_model()
-#main()
+#get_best_model()
+main()
 
 
 
