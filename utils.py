@@ -2,7 +2,7 @@ import json
 
 
 def get_history():
-    with open('data_2012.json') as data_file:
+    with open('data_old.json') as data_file:
         data = json.load(data_file)
     return data
 

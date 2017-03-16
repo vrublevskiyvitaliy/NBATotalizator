@@ -64,9 +64,9 @@ def get_winner_simple(match, history):
     if abs(risk) <= CLOSE_TO_ZERO:
         return REFUSAL
     if risk <= 0:
-        return match['second_team']
+        return [risk, match['second_team']]
     else:
-        return match['first_team']
+        return [risk, match['first_team']]
 
 
 def main():
@@ -93,6 +93,7 @@ def main():
                 }
             )
         else:
+            [risk, winner] = winner
             if history[i]['first_score'] > history[i]['second_score']:
                 actual_winner = history[i]['first_team']
                 gain_c = history[i]['f_odd']
@@ -112,18 +113,22 @@ def main():
                     'match': history[i],
                     'my_result': winner,
                     'gain': my_gain,
-                    'is_correct': is_correct
+                    'is_correct': is_correct,
+                    'risk': risk
                 }
             )
 
     sum_gain = 0
     sum_correct = 0
+    first_team_win = 0
     correct_predictions = 0
     incorrect_predictions = 0
     drop_predictions = 0
     refusals = 0
 
     for res in my_results:
+        if res['my_result'] == res['match']['first_team']:
+            first_team_win += 1
         sum_gain += res['gain']
         sum_correct += res['is_correct']
         if res['is_correct'] > 0:
@@ -139,12 +144,14 @@ def main():
     print('We gain: ', sum_gain)
     print('Per game gain: ', sum_gain / len(history))
     print('Total summarized predictions: ', sum_correct)
+    print('All predictions: ', correct_predictions + incorrect_predictions)
     print('Correct predictions: ', correct_predictions)
     print('Incorrect predictions: ', incorrect_predictions)
     print('We cannot predict: ', drop_predictions)
     print('Refusals: ', refusals)
+    print('First team win: ', first_team_win)
 
-    return sum_gain
+    return my_results
 
 
 def get_best_model():
@@ -188,7 +195,10 @@ def write_to_file():
         json.dump(all_data, outfile)
 
 #get_best_model()
-main()
+#main()
 
 
+'''
+[-3 , 1]
 
+'''

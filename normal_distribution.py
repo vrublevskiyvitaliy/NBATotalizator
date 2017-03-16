@@ -54,9 +54,9 @@ def get_winner_simple(match, history):
     if risk is None:
         return None
     if risk <= 0:
-        return match['second_team']
+        return [risk, match['second_team']]
     else:
-        return match['first_team']
+        return [risk, match['first_team']]
 
 
 def main():
@@ -75,6 +75,7 @@ def main():
                 }
             )
         else:
+            [risk, winner] = winner
             if history[i]['first_score'] > history[i]['second_score']:
                 actual_winner = history[i]['first_team']
                 gain_c = history[i]['f_odd']
@@ -94,7 +95,8 @@ def main():
                     'match': history[i],
                     'my_result': winner,
                     'gain': my_gain,
-                    'is_correct': is_correct
+                    'is_correct': is_correct,
+                    'risk': risk
                 }
             )
 
@@ -121,6 +123,7 @@ def main():
     print('Incorrect predictions: ' + str(incorrect_predictions))
     print('We cannot predict: ' + str(drop_predictions))
 
+    return my_results
 
 main()
 
