@@ -191,14 +191,8 @@ def get_best_model():
 
 def write_to_file():
     global all_data
-    with open('my_results_2012.json', 'w') as outfile:
+    with open('my_results_2012_.json', 'w') as outfile:
         json.dump(all_data, outfile)
 
-#get_best_model()
-#main()
-
-
-'''
-[-3 , 1]
-
-'''
+get_best_model()
+main()
